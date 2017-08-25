@@ -9,7 +9,6 @@
 6. Create and activate user
 
 ## Set environment variables
-Add the following to your ~/.bash_profile:
 
 ```
 export ISSUER=[your okta domain]/oauth2/default
@@ -17,9 +16,4 @@ export CLIENT_ID=[your client id]
 export CLIENT_SECRET=[your client secret]
 export USERNAME=[created user]
 export PASSWORD=[password from activation]
-```
-
-Then run:
-```bash
-. ~/.bash_profile
 ```

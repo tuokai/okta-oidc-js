@@ -7,6 +7,10 @@ module.exports = class HomePage {
     this.body = $('body');
   }
 
+  async load() {
+    await browser.get(constants.BASE_URI);
+  }
+
   async waitUntilVisible() {
     const url = util.ensureTrailingSlash(constants.BASE_URI);
     await browser.wait(EC.urlIs(url), 50000);

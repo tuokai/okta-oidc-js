@@ -19,7 +19,8 @@ describe('Basic login redirect', () => {
 
   it('should redirect to Okta if login is required, then return to the protected page', async () => {
     // attempt to navigate to a protected page
-    await browser.get(constants.PROTECTED_PATH);
+    const privatePage = new ProtectedPage();
+    await privatePage.load();
 
     // we're not logged in, so we should redirect
     const signInPage = new OktaSignInPage();
@@ -30,13 +31,12 @@ describe('Basic login redirect', () => {
     });
   
     // wait for protected page to appear with contents
-    const privatePage = new ProtectedPage();
     await privatePage.waitUntilVisible();
     expect(privatePage.getBodyText()).toContain('sub');
 
     // navigate to home page
-    await browser.get(constants.BASE_URI);
     const homePage = new HomePage();
+    await homePage.load();
     await homePage.waitUntilVisible();
     expect(homePage.getBodyText()).toContain('Welcome home');
 

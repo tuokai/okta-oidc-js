@@ -77,7 +77,7 @@ It's required in order for `ensureAuthenticated` and `isAuthenticated` to work a
 * `/login` - redirects to the Okta sign-in page by default
 * `/authorization-code/callback` - processes the OIDC response, then attaches userinfo to the session
 
-### oidc.ensureAuthenticated
+### oidc.ensureAuthenticated(redirectTo)
 
 Use this to protect your routes. If not authenticated, this will redirect to the login route. If not authenticated and the protected route should not return html, this will return a 401 instead.
 
@@ -87,7 +87,9 @@ app.get('/protected', oidc.ensureAuthenticated(), (req, res) => {
 });
 ```
 
-### req.isAuthenticated
+** redirectTo ** - the path to return to after login
+
+### req.isAuthenticated()
 
 This allows you to determine if a user is authenticated.
 
@@ -101,7 +103,7 @@ app.get('/', (req, res) => {
 });
 ```
 
-### req.logout
+### req.logout()
 
 This allows you to end the session.
 
@@ -148,6 +150,10 @@ const oidc = new ExpressOIDC({
   }
 });
 ```
+
+* **path** - where our middleware attaches
+* **handler** - additional middleware for after we validate the OpenId Connect response
+* **defaultRedirect** - where we redirect to after login when there's no protected route to return to
 
 ### Extending the User
 
