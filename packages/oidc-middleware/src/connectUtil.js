@@ -32,33 +32,7 @@ connectUtil.createOIDCRouter = context => {
 };
 
 connectUtil.createLoginHandler = context => {
-  const loginHandler = context.options.routes.login.handler;
-  if (!loginHandler) {
-    return passport.authenticate('oidc');
-  }
-  return (req, res, next) => {
-    switch (loginHandler.length) {
-      case 2:
-        try {
-          loginHandler(req, res);
-          next();
-        } catch (e) {
-          next(e);
-        }
-        break;
-
-      case 3:
-        try {
-          loginHandler(req, res, next);
-        } catch (e) {
-          next(e);
-        }
-        break;
-
-      default:
-        next(new OIDCMiddlewareError('The login handler must have an arity of 2 or 3.'));
-    }
-  };
+  return passport.authenticate('oidc');
 };
 
 connectUtil.createCallbackHandler = context => {

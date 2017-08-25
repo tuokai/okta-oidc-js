@@ -19,11 +19,12 @@ This integration depends on sessions to store user information. Ensure the [expr
 ```javascript
 const express = require('express');
 const session = require('express-session');
+const { ExpressOIDC } = require('@okta/oidc-middleware');
 
 const app = express();
-app.use(session(...)); // ensure this is before ExpressOIDC
+app.use(session({ /* options */ })); // ensure this is before ExpressOIDC
 
-const oidc = new ExpressOIDC(...);
+const oidc = new ExpressOIDC({ /* options */ });
 app.use(oidc.router);
 ```
 
@@ -33,7 +34,7 @@ app.use(oidc.router);
 
 Configures your OIDC integration.
 
-```
+```javascript
 const { ExpressOIDC } = require('@okta/oidc-middleware');
 
 const oidc = new ExpressOIDC({
@@ -66,12 +67,12 @@ const { ExpressOIDC } = require('@okta/oidc-middleware');
 const express = require('express');
 
 const app = express();
-const oidc = new ExpressOIDC(...);
+const oidc = new ExpressOIDC({ /* options */ });
 
 app.use(oidc.router);
 ```
 
-It adds the following routes:
+It's required in order for `ensureAuthenticated` and `isAuthenticated` to work and adds the following routes:
 
 * `/login` - redirects to the Okta sign-in page by default
 * `/authorization-code/callback` - processes the OIDC response, then attaches userinfo to the session
@@ -131,13 +132,10 @@ If you need to modify the default login and callback routes, the `routes` config
 
 ```javascript
 const oidc = new ExpressOIDC({
-  ...
+  { /* options */ }
   routes: {
     login: {
-      path: '/different/login',
-      handler: (req, res) => {
-        // my custom handler
-      }
+      path: '/different/login'
     },
     callback: {
       path: '/different/callback',
@@ -161,13 +159,14 @@ const express = require('express');
 const session = require('express-session');
 
 const app = express();
-app.use(session(...));
-const oidc = new ExpressOIDC(...);
+app.use(session({ /* options */ }));
+const oidc = new ExpressOIDC({ /* options */ });
 app.use(oidc.router);
 
 function addUserContext(req, res, next) {
   if (!req.userinfo) return next();
 
+  // request additional info from your database
   User.findOne({ id: req.userinfo.sub }, (err, user) => {
     if (err) return next(err);
     req.user = user;
@@ -177,5 +176,5 @@ function addUserContext(req, res, next) {
 
 app.use(addUserContext);
 
-... // add other routes
+{ /* options */ } // add other routes
 ```

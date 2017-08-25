@@ -1,7 +1,7 @@
 {
   "name": "@okta/oidc-middleware",
   "version": "0.0.1",
-  "description": "OpenId Connect middleware for Node.js authorization code flows",
+  "description": "OpenId Connect middleware for authorization code flows",
   "main": "index.js",
   "scripts": {
     "test": "webdriver-manager update && protractor test/e2e/conf.js"
@@ -14,6 +14,7 @@
     "connect-ensure-login": "^0.1.1",
     "express": "^4.15.4",
     "express-session": "^1.15.5",
+    "lodash": "^4.17.4",
     "negotiator": "^0.6.1",
     "openid-client": "^1.12.0",
     "passport": "^0.3.2"

@@ -19,6 +19,9 @@ const oidc = new ExpressOIDC({
   redirect_uri: constants.REDIRECT_URI
 });
 
+new ExpressOIDC()
+
+oidc.router
 app.use(oidc.router);
 
 app.get('/', (req, res) => {
