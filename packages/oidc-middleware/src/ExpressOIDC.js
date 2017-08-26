@@ -11,7 +11,7 @@ class OIDCMiddlewareError extends Error {}
  * 
  * @class ExpressOIDC
  */
-module.exports = class ExpressOIDC {
+module.exports = class ExpressOIDC extends EventEmitter {
 
   /**
    * Creates an instance of ExpressOIDC
@@ -32,6 +32,8 @@ module.exports = class ExpressOIDC {
    * @param {Function} [options.routes.callback.handler] This handles responses from the OpenId Connect callback
    */
   constructor(options = {}) {
+    super();
+
     const {
       issuer,
       client_id,
@@ -64,9 +66,7 @@ module.exports = class ExpressOIDC {
     }, options)
 
     const context = {
-      options,
-      sessionKey: `oidc:${issuer}`,
-      pubsub: new EventEmitter()
+      options
     };
 
     /**
@@ -94,13 +94,8 @@ module.exports = class ExpressOIDC {
     .then(client => {
       context.client = client;
       oidcUtil.bootstrapPassportStrategy(context);
-      context.pubsub.emit('client_created');
-      context.pubsub.removeAllListeners();
+      this.emit('ready');
     })
-    .catch(err => {
-      context.clientError = err;
-      context.pubsub.emit('error', err);
-      context.pubsub.removeAllListeners();
-    });
+    .catch(err => this.emit('error', err));
   }
 };

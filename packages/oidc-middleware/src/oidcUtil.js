@@ -31,7 +31,7 @@ oidcUtil.bootstrapPassportStrategy = context => {
     params: {
       scope: context.options.scope
     },
-    sessionKey: context.sessionKey,
+    sessionKey: `oidc:${context.options.issuer}`,
     client: context.client
   }, (tokens, userinfo, done) => {
     done(null, userinfo);

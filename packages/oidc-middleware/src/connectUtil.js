@@ -3,18 +3,9 @@ const { Router } = require('express');
 
 const connectUtil = module.exports;
 
-// Ensures that a request won't complete until we've attempted to connect to the issuer
-connectUtil.waitForClient = (context, req, res, next) => {
-  if (context.client) return next();
-  if (context.clientError) return next(context.clientError);
-  context.pubsub.on('client_created', next);
-  context.pubsub.on('error', next);
-};
-
 // Create a router to easily add routes
 connectUtil.createOIDCRouter = context => {
   const oidcRouter = new Router();
-  oidcRouter.use(connectUtil.waitForClient.bind(null, context));
   oidcRouter.use(passport.initialize({ userProperty: 'userinfo' }));
   oidcRouter.use(passport.session());
 

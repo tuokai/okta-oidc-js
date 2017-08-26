@@ -19,9 +19,6 @@ const oidc = new ExpressOIDC({
   redirect_uri: constants.REDIRECT_URI
 });
 
-new ExpressOIDC()
-
-oidc.router
 app.use(oidc.router);
 
 app.get('/', (req, res) => {
@@ -41,4 +38,10 @@ app.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
-app.listen(constants.PORT, () => console.log(`Test app listening on port ${constants.PORT}!`));
+oidc.on('ready', () => {
+  app.listen(constants.PORT, () => console.log(`Test app listening on port ${constants.PORT}!`));
+});
+
+oidc.on('error', err => {
+  console.log('Unable to start the server', err);
+});

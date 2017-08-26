@@ -26,6 +26,12 @@ app.use(session({ /* options */ })); // ensure this is before ExpressOIDC
 
 const oidc = new ExpressOIDC({ /* options */ });
 app.use(oidc.router);
+oidc.on('ready', () => {
+  app.listen(3000, () => console.log('app started'));
+});
+oidc.on('error', err => {
+  // An error occurred while setting up OIDC
+})
 ```
 
 > By default, the session middleware uses a MemoryStore, which is not designed for production use. Use [another session store](https://github.com/expressjs/session#compatible-session-stores) for production.
@@ -76,6 +82,26 @@ It's required in order for `ensureAuthenticated` and `isAuthenticated` to work a
 
 * `/login` - redirects to the Okta sign-in page by default
 * `/authorization-code/callback` - processes the OIDC response, then attaches userinfo to the session
+
+### oidc.on('ready', callback)
+
+The middleware must retrieve some information about your client before starting the server. You **must** wait until ExpressOIDC is ready to start your server.
+
+```javascript
+oidc.on('ready', () => {
+  app.listen(3000, () => console.log('app started'));
+});
+```
+
+### oidc.on('error', callback)
+
+This is triggered if an error occurs while ExpressOIDC is trying to start.
+
+```javascript
+oidc.on('error', err => {
+  // An error occurred while setting up OIDC
+});
+```
 
 ### oidc.ensureAuthenticated(redirectTo)
 
@@ -183,4 +209,7 @@ function addUserContext(req, res, next) {
 app.use(addUserContext);
 
 { /* options */ } // add other routes
+
+oidc.on('ready', () => app.listen(3000));
+oidc.on('error', err => console.log('could not start', err));
 ```
